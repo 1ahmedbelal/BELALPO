@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CongressFlow – NSDA Congressional Debate Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at top left, #4f46e5, #0f172a 45%, #020617 100%);
+      --card-bg: rgba(15, 23, 42, 0.9);
+      --card-border: rgba(148, 163, 184, 0.2);
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.14);
+      --accent-bright: #a855f7;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #f97373;
+      --success: #22c55e;
+      --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.75);
+      --radius-lg: 24px;
+      --radius-pill: 999px;
+      --transition-fast: 160ms ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1200px;
+      min-height: calc(100vh - 48px);
+      background: linear-gradient(to bottom right, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.94));
+      border-radius: 32px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      box-shadow: var(--shadow-soft);
+      padding: 24px 26px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -180px;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(79, 70, 229, 0.16), transparent 50%),
+        radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.12), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header, main, footer {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 18px;
+      background: conic-gradient(from 160deg, #4f46e5, #a855f7, #22c55e, #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 20px;
+      box-shadow: 0 12px 32px rgba(79, 70, 229, 0.8);
+    }
+
+    .brand-text-title {
+      font-size: 20px;
+      font-weight: 650;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-pill {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-muted);
+    }
+
+    .brand-text-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.8);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 12px;
+      }
+      .app {
+        border-radius: 20px;
+        padding: 18px 16px 16px;
+      }
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header-badges {
+        justify-content: flex-start;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      padding: 18px 18px 16px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 75% 0%, rgba(79, 70, 229, 0.3), transparent 55%),
+        radial-gradient(circle at 0% 100%, rgba(34, 197, 94, 0.2), transparent 50%);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      margin-bottom: 4px;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(to right, #a855f7, #4f46e5, #22c55e);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin-bottom: 14px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      transition: background var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), color var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #4f46e5, #a855f7);
+      color: #f9fafb;
+      box-shadow: 0 16px 35px rgba(79, 70, 229, 0.7);
+      border-color: rgba(129, 140, 248, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 45px rgba(79, 70, 229, 0.95);
+    }
+
+    .btn-subtle {
+      border-color: rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+    }
+
+    .btn-subtle:hover {
+      border-color: rgba(129, 140, 248, 0.9);
+      color: #e5e7eb;
+    }
+
+    .btn-pill-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      border-radius: 999px;
+      padding: 3px 7px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-left: 4px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .mini-pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.85);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mini-pill span {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--text-muted);
+    }
+
+    .hero-divider {
+      margin: 14px 0 10px;
+      height: 1px;
+      background: radial-gradient(circle, rgba(148, 163, 184, 0.6), transparent);
+      opacity: 0.7;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      font-size: 11px;
+    }
+
+    .hero-chip {
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 7px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hero-chip-label {
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      color: var(--text-muted);
+      font-size: 9px;
+    }
+
+    .hero-chip-value {
+      font-size: 11px;
+    }
+
+    .hero-chip-highlight {
+      color: #bfdbfe;
+    }
+
+    .hero-chip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4f46e5;
+      box-shadow: 0 0 12px rgba(79, 70, 229, 0.9);
+      margin-right: 4px;
+    }
+
+    .hero-tagline {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    .card-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .tabs-compact {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      gap: 2px;
+    }
+
+    .tabs-compact button {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border-radius: 999px;
+      padding: 3px 9px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .tabs-compact button.active {
+      background: rgba(15, 23, 42, 0.95);
+      color: #e5e7eb;
+      transform: translateY(-0.5px);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 800px) {
+      .split {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .field-group {
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    select {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      padding: 7px 10px;
+      font-size: 13px;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(148, 163, 184, 0.7);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+      max-height: 280px;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(129, 140, 248, 0.9);
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.6);
+      transform: translateY(-0.5px);
+    }
+
+    .inline-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .code-pill {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      padding: 5px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      font-size: 11px;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .dashboard-title {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .dashboard-title span {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .role-pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .role-dot-po {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4f46e5;
+      box-shadow: 0 0 12px rgba(79, 70, 229, 0.9);
+    }
+
+    .role-dot-comp {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+    }
+
+    .tab-buttons {
+      display: inline-flex;
+      gap: 4px;
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    .tab-buttons button {
+      border: none;
+      border-radius: 999px;
+      padding: 4px 11px;
+      font-size: 11px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .tab-buttons button.active {
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+      transform: translateY(-0.5px);
+    }
+
+    .tab-buttons button span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(148, 163, 184, 0.65);
+    }
+
+    .tab-buttons button.active span.dot {
+      background: #4f46e5;
+      box-shadow: 0 0 10px rgba(79, 70, 229, 0.9);
+    }
+
+    .tab-panel {
+      margin-top: 10px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.86);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 12px;
+    }
+
+    .panel-heading-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .panel-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .table-container {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.96);
+      max-height: 270px;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.97);
+      z-index: 2;
+    }
+
+    th, td {
+      padding: 7px 10px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+      text-align: left;
+    }
+
+    th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    tr:nth-child(even) td {
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    tr:hover td {
+      background: rgba(15, 23, 42, 0.94);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-muted);
+    }
+
+    .tag.tag-speaker {
+      border-color: rgba(129, 140, 248, 0.9);
+      color: #c7d2fe;
+    }
+
+    .tag.tag-current {
+      border-color: rgba(249, 115, 22, 0.95);
+      color: #fed7aa;
+    }
+
+    .small-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-muted);
+      padding: 3px 7px;
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .small-btn:hover {
+      border-color: rgba(129, 140, 248, 0.9);
+      color: #e5e7eb;
+      transform: translateY(-0.5px);
+    }
+
+    .small-btn-primary {
+      border-color: rgba(129, 140, 248, 0.9);
+      color: #e5e7eb;
+    }
+
+    .small-btn-danger {
+      border-color: rgba(248, 113, 113, 0.85);
+      color: #fecaca;
+    }
+
+    .badge-count {
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      font-size: 10px;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.94);
+    }
+
+    .status-pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-pill.pending {
+      border-color: rgba(234, 179, 8, 0.9);
+      color: #facc15;
+    }
+
+    .status-pill.approved {
+      border-color: rgba(34, 197, 94, 0.9);
+      color: #bbf7d0;
+    }
+
+    .status-pill.rejected {
+      border-color: rgba(248, 113, 113, 0.95);
+      color: #fecaca;
+    }
+
+    .flex-row-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .amendments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .amend-card {
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.98);
+      padding: 7px 9px;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .amend-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    .amend-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .amend-body {
+      font-size: 12px;
+      color: #e5e7eb;
+      white-space: pre-wrap;
+    }
+
+    .amend-just {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .amend-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      gap: 8px;
+    }
+
+    .scripts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    @media (max-width: 900px) {
+      .scripts-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    details.script-block {
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: rgba(15, 23, 42, 0.98);
+      padding: 7px 9px;
+    }
+
+    details.script-block summary {
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      list-style: none;
+    }
+
+    details.script-block summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .script-tag-line {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .script-body {
+      font-size: 12px;
+      color: #e5e7eb;
+      margin-top: 6px;
+      white-space: pre-wrap;
+      border-top: 1px solid rgba(30, 41, 59, 0.9);
+      padding-top: 6px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 40;
+      right: 26px;
+      bottom: 24px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: #e5e7eb;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 16px 35px rgba(15, 23, 42, 0.95);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 150ms ease-out, transform 150ms ease-out;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 1);
+    }
+
+    footer {
+      font-size: 10px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-top: 4px;
+      border-top: 1px solid rgba(30, 41, 59, 0.9);
+    }
+
+    footer span strong {
+      color: rgba(191, 219, 254, 0.9);
+    }
+
+    .error-text {
+      font-size: 11px;
+      color: #fecaca;
+      margin-top: 2px;
+    }
+
+    .po-only {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .po-active .po-only {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header>
+      <div class="brand">
+        <div class="brand-logo">C</div>
+        <div>
+          <div class="brand-text-title">
+            CongressFlow
+            <span class="brand-pill">NSDA Congressional Debate</span>
+          </div>
+          <div class="brand-text-sub">
+            Live precedence, smart amendments, and polished scripts in one place.
+          </div>
+        </div>
+      </div>
+      <div class="header-badges">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          Live chamber view
+        </div>
+        <div class="badge">
+          🏛️ For Presiding Officers & Competitors
+        </div>
+        <div class="badge">
+          🔒 Join codes & passwords
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="layout">
+        <!-- LEFT: HERO + QUICK INFO -->
+        <section class="card hero-card">
+          <div class="hero-title">
+            Run congress like a <span class="hero-highlight">pro presiding officer.</span>
+          </div>
+          <p class="hero-subtitle">
+            Create a chamber, share a join code, update precedence in real time, and collect amendments
+            without passing a single piece of paper. Competitors always see what’s happening.
+          </p>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" id="btnStartAsPO">
+              ➕ Create chamber as PO
+              <span class="btn-pill-label">PRESIDING OFFICER</span>
+            </button>
+            <button class="btn btn-subtle" id="btnJoinAsCompetitor">
+              🙋 Join as competitor
+            </button>
+          </div>
+
+          <div class="hero-meta">
+            <div class="mini-pill">
+              <span>PRECEDENCE</span>
+              <strong>Auto-sorted by speeches & time</strong>
+            </div>
+            <div class="mini-pill">
+              <span>AMENDMENTS</span>
+              Digital intake → PO inbox
+            </div>
+            <div class="mini-pill">
+              <span>SCRIPTS</span>
+              Ready-to-read presiding lines
+            </div>
+          </div>
+
+          <div class="hero-divider"></div>
+
+          <div class="hero-grid">
+            <div class="hero-chip">
+              <span class="hero-chip-label">Presiding view</span>
+              <div class="hero-chip-value">
+                <span class="hero-chip-dot"></span>
+                <span class="hero-chip-highlight">Live precedence board</span> with “next speaker”
+                suggestions at a glance.
+              </div>
+            </div>
+            <div class="hero-chip">
+              <span class="hero-chip-label">Competitor view</span>
+              <div class="hero-chip-value">
+                Transparent queue, ✍️ amendment submit, and status tracking so you
+                know when you’re up.
+              </div>
+            </div>
+            <div class="hero-chip">
+              <span class="hero-chip-label">Offline-friendly</span>
+              <div class="hero-chip-value">
+                Works as a single page. Hook it to a backend later for true multi-device
+                real-time sync.
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-tagline">
+            “The chamber respects a PO who’s organized, transparent, and fair. This helps you
+            be that PO.”
+          </div>
+        </section>
+
+        <!-- RIGHT: CHAMBER SETUP / JOIN -->
+        <section class="card">
+          <div class="card-title-row">
+            <div>
+              <div class="card-title">Chamber Setup & Join</div>
+              <div class="card-subtitle">
+                Create a chamber and share the join code, or join one with your PO’s code.
+              </div>
+            </div>
+            <div class="tabs-compact">
+              <button id="tabCreate" class="active" type="button">Create</button>
+              <button id="tabJoin" type="button">Join</button>
+            </div>
+          </div>
+
+          <div id="createChamberPanel">
+            <form id="createChamberForm">
+              <div class="field-group">
+                <label for="createChamberName">Chamber name</label>
+                <input
+                  type="text"
+                  id="createChamberName"
+                  placeholder="e.g., Senate A – Super Congress @ Nationals"
+                  required
+                />
+              </div>
+              <div class="field-group">
+                <label for="createChamberPassword">Chamber password</label>
+                <input
+                  type="password"
+                  id="createChamberPassword"
+                  placeholder="Set a password only POs & judges should know"
+                  required
+                />
+                <div class="muted">
+                  Used together with the join code for secure access. Share carefully.
+                </div>
+              </div>
+              <div class="inline-row">
+                <button type="submit" class="btn btn-primary">Create chamber</button>
+                <div class="muted">
+                  A random <span class="mono">join code</span> will be generated automatically.
+                </div>
+              </div>
+              <div class="error-text hidden" id="createChamberError"></div>
+            </form>
+          </div>
+
+          <div id="joinChamberPanel" class="hidden">
+            <form id="joinChamberForm">
+              <div class="field-group">
+                <label for="joinCode">Join code</label>
+                <input
+                  type="text"
+                  id="joinCode"
+                  placeholder="Enter the 5-character code from your PO"
+                  required
+                />
+              </div>
+              <div class="field-group">
+                <label for="joinPassword">Chamber password</label>
+                <input
+                  type="password"
+                  id="joinPassword"
+                  placeholder="Ask your PO or judge if you don't know"
+                  required
+                />
+              </div>
+              <div class="field-group">
+                <label for="joinRole">I am joining as</label>
+                <select id="joinRole">
+                  <option value="competitor">Competitor</option>
+                  <option value="po">Presiding Officer</option>
+                  <option value="observer">Judge / Coach / Observer</option>
+                </select>
+              </div>
+              <div class="inline-row">
+                <button type="submit" class="btn btn-primary">Join chamber</button>
+                <div class="muted">
+                  You’ll be taken to the live chamber view once authenticated.
+                </div>
+              </div>
+              <div class="error-text hidden" id="joinChamberError"></div>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <!-- CHAMBER DASHBOARD -->
+      <section class="card hidden" id="chamberDashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <div>
+              Chamber: <span id="chamberNameDisplay"></span>
+            </div>
+            <span>
+              Join code: <span class="code-pill mono" id="chamberCodeDisplay"></span>
+            </span>
+          </div>
+          <div class="flex-row-between">
+            <div class="role-pill" id="rolePill">
+              <span class="role-dot-po" id="roleDot"></span>
+              <span id="roleLabel">Presiding Officer</span>
+            </div>
+            <div class="tab-buttons">
+              <button type="button" class="active" data-tab="precedence">
+                <span class="dot"></span> Precedence
+              </button>
+              <button type="button" data-tab="amendments">
+                <span class="dot"></span> Amendments
+              </button>
+              <button type="button" data-tab="scripts">
+                <span class="dot"></span> PO Scripts
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="dashboardInner" class="po-active">
+          <!-- PRECEDENCE TAB -->
+          <div class="tab-panel" data-panel="precedence">
+            <div class="split">
+              <div>
+                <div class="panel-heading-row">
+                  <div>
+                    <div class="panel-title">Precedence board</div>
+                    <div class="panel-subtitle">
+                      Lowest speeches & earliest time rise to the top. Click to log speeches & questions.
+                    </div>
+                  </div>
+                  <div class="inline-row">
+                    <button type="button" class="small-btn small-btn-primary po-only" id="btnSuggestNext">
+                      🔍 Suggest next speaker
+                    </button>
+                    <div class="badge-count">
+                      Speakers: <span id="precedenceCount">0</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Speaker</th>
+                        <th>School</th>
+                        <th>Seat</th>
+                        <th>Speeches</th>
+                        <th>Questions</th>
+                        <th>Last Spoke</th>
+                        <th>Tags</th>
+                        <th class="mono">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="precedenceTableBody">
+                      <!-- rows injected by JS -->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="muted" style="margin-top: 6px;">
+                  Sorting: speeches ↑, questions ↑, oldest last-spoke ↑, then alphabetically.
+                </div>
+              </div>
+              <div>
+                <div class="panel-heading-row">
+                  <div>
+                    <div class="panel-title">Add / manage competitor</div>
+                    <div class="panel-subtitle">
+                      Add speakers once. Log speeches & questions as you go.
+                    </div>
+                  </div>
+                  <div class="tag">
+                    <span>PO-ONLY TO EDIT</span>
+                  </div>
+                </div>
+                <form id="addSpeakerForm" class="po-only">
+                  <div class="field-group">
+                    <label for="speakerName">Name</label>
+                    <input type="text" id="speakerName" placeholder="e.g., Alex Martinez" required />
+                  </div>
+                  <div class="field-group">
+                    <label for="speakerSchool">School</label>
+                    <input type="text" id="speakerSchool" placeholder="e.g., Oxford High School" />
+                  </div>
+                  <div class="field-group">
+                    <label for="speakerSeat">Seat / Code</label>
+                    <input type="text" id="speakerSeat" placeholder="e.g., A3 or AFF-1" />
+                  </div>
+                  <div class="inline-row">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                      ➕ Add to precedence
+                    </button>
+                    <div class="muted">
+                      Add everyone at the start so competitors can see the full queue.
+                    </div>
+                  </div>
+                  <div class="error-text hidden" id="addSpeakerError"></div>
+                </form>
+                <div class="muted" style="margin-top: 8px;">
+                  Competitors see this board in real time on their devices (once connected
+                  through your sharing setup).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AMENDMENTS TAB -->
+          <div class="tab-panel hidden" data-panel="amendments">
+            <div class="split">
+              <div>
+                <div class="panel-heading-row">
+                  <div>
+                    <div class="panel-title">Submit amendment (competitor)</div>
+                    <div class="panel-subtitle">
+                      Draft clearly. This sends your amendment to the PO’s digital inbox.
+                    </div>
+                  </div>
+                </div>
+                <form id="amendmentForm">
+                  <div class="field-group">
+                    <label for="amendName">Your name</label>
+                    <input type="text" id="amendName" placeholder="Full name" required />
+                  </div>
+                  <div class="field-group">
+                    <label for="amendSchool">School</label>
+                    <input type="text" id="amendSchool" placeholder="e.g., Oxford High School" />
+                  </div>
+                  <div class="field-group">
+                    <label for="amendBillTitle">Bill / resolution</label>
+                    <input
+                      type="text"
+                      id="amendBillTitle"
+                      placeholder="e.g., A Bill to Reform the College Admissions Process"
+                      required
+                    />
+                  </div>
+                  <div class="field-group">
+                    <label for="amendSection">Section / line(s) being amended</label>
+                    <input
+                      type="text"
+                      id="amendSection"
+                      placeholder="e.g., Section 2, lines 12–16"
+                      required
+                    />
+                  </div>
+                  <div class="field-group">
+                    <label for="amendText">Proposed amendment text</label>
+                    <textarea
+                      id="amendText"
+                      placeholder="Type the exact language you want to insert, strike, or replace."
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="field-group">
+                    <label for="amendJust">Rationale (optional, but helpful)</label>
+                    <textarea
+                      id="amendJust"
+                      placeholder="Briefly explain why this amendment improves the legislation."
+                    ></textarea>
+                  </div>
+                  <div class="inline-row">
+                    <button type="submit" class="btn btn-primary">
+                      ✉️ Submit amendment
+                    </button>
+                    <div class="muted">
+                      The PO will see your amendment with your name & time stamp.
+                    </div>
+                  </div>
+                  <div class="error-text hidden" id="amendError"></div>
+                </form>
+              </div>
+              <div>
+                <div class="panel-heading-row">
+                  <div>
+                    <div class="panel-title">Amendment inbox (PO)</div>
+                    <div class="panel-subtitle">
+                      Review, mark as in order, or reject with a couple clicks.
+                    </div>
+                  </div>
+                  <div class="badge-count">
+                    Pending: <span id="pendingAmendCount">0</span>
+                  </div>
+                </div>
+                <div class="amendments-list" id="amendmentsList">
+                  <!-- Amendments injected here -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SCRIPTS TAB -->
+          <div class="tab-panel hidden" data-panel="scripts">
+            <div class="panel-heading-row">
+              <div>
+                <div class="panel-title">Presiding officer script bank</div>
+                <div class="panel-subtitle">
+                  Keep your language sharp and consistent. Adapt to your own style as you gain experience.
+                </div>
+              </div>
+            </div>
+
+            <div class="scripts-grid">
+              <details class="script-block" open>
+                <summary>
+                  <div class="script-tag-line">Opening the chamber</div>
+                  Standard opening and roll call
+                </summary>
+                <div class="script-body">
+<strong>Call to order:</strong>
+“[Tap gavel] The chamber will now come to order. We are the [House/Senate] of [tournament name]. 
+My name is [your name], and I’ll be serving as your Presiding Officer for this session.”
+
+<strong>Roll call / seating:</strong>
+“We will now proceed with roll call. When your name is called, please respond ‘present’ and confirm your school and seat.”
+[Conduct roll call.]
+
+<strong>Agenda / docket:</strong>
+“Delegates, your docket has been distributed. Are there any motions regarding today’s agenda?”
+
+<strong>Adopting the docket:</strong>
+“Seeing that motion, is there a second? … All those in favor of adopting the docket as presented, please say ‘Aye’. 
+All opposed, ‘Nay’. The ‘Ayes’ have it and the docket is adopted.”
+                </div>
+              </details>
+
+              <details class="script-block">
+                <summary>
+                  <div class="script-tag-line">Recognizing speakers</div>
+                  Using live precedence fairly
+                </summary>
+                <div class="script-body">
+<strong>First speech on a bill:</strong>
+“On this legislation, who wishes to give the authorship or sponsorship speech? [Recognize highest priority sponsor.] 
+You are now recognized for three minutes.”
+
+<strong>Subsequent speeches:</strong>
+“On this legislation, who wishes to speak in affirmation/negation? [Glance at the live precedence board.] 
+According to precedence, the chair recognizes [last name] of [school]. You are recognized for three minutes.”
+
+<strong>Reminder about precedence:</strong>
+“For transparency, I am using a live precedence system: lower speeches and earlier previous participation are prioritized. 
+If you have not yet spoken today, please continue raising your placard so I can recognize you as soon as you rise to the top.”
+                </div>
+              </details>
+
+              <details class="script-block">
+                <summary>
+                  <div class="script-tag-line">Managing questioning</div>
+                  Clear, time-bound questions
+                </summary>
+                <div class="script-body">
+<strong>Transition to questioning:</strong>
+“We will now move to a two-minute questioning period for the speaker. Questioners, please rise.”
+
+<strong>Recognizing questioners:</strong>
+“The chair recognizes [name] of [school] for a question. Please keep questions concise and non-prefaced.”
+
+<strong>Enforcing time & clarity:</strong>
+“Delegate, please phrase that as a single, direct question. We’re short on time and want to maximize fairness.”
+
+<strong>Ending questioning:</strong>
+“That concludes the two-minute questioning period. Thank you, delegates. We will now move to the next speaker.”
+                </div>
+              </details>
+
+              <details class="script-block">
+                <summary>
+                  <div class="script-tag-line">Handling amendments</div>
+                  Digital submission + ruling
+                </summary>
+                <div class="script-body">
+<strong>Noticing an amendment:</strong>
+“The chair has received an amendment from [name] of [school] to [bill title]. The amendment proposes to change 
+[brief summary of the section].”
+
+<strong>Ruling in order:</strong>
+“The amendment is in order as it is germane and properly formatted. We will now proceed to one speech in affirmation 
+and one in negation of the amendment before a vote.”
+
+<strong>Ruling out of order:</strong>
+“After review, this amendment is out of order as it is not germane to the scope of the legislation. It will not be considered.”
+
+<strong>Taking the vote:</strong>
+“All those in favor of adopting the amendment, please say ‘Aye’. All opposed, ‘Nay’. 
+[Pause, judge volume.] In the opinion of the chair, the ‘Ayes/Nays’ have it and the amendment is adopted/rejected.”
+                </div>
+              </details>
+
+              <details class="script-block">
+                <summary>
+                  <div class="script-tag-line">Motions & procedure</div>
+                  Recognizing and ruling on motions
+                </summary>
+                <div class="script-body">
+<strong>General motion prompt:</strong>
+“Are there any motions on the floor at this time?”
+
+<strong>Motion to previous question:</strong>
+“There is a motion to move the previous question on this legislation, which seeks to end debate and proceed to a vote. 
+Is there a second? … Seeing a second, this requires a two-thirds vote. All those in favor, please say ‘Aye’…”
+
+<strong>Motion to recess / adjourn:</strong>
+“There is a motion to [recess/adjourn]. Is there a second? … This motion requires a simple majority. All those in favor…”
+
+<strong>Ruling a motion dilatory:</strong>
+“The motion is ruled dilatory at this time as it has just been attempted and failed. We will proceed with business.”
+                </div>
+              </details>
+
+              <details class="script-block">
+                <summary>
+                  <div class="script-tag-line">Voting & results</div>
+                  Clear endings and score-keeping
+                </summary>
+                <div class="script-body">
+<strong>Calling the vote:</strong>
+“Seeing no further speakers, debate on this legislation is exhausted. We will now move to a vote.”
+
+<strong>Voice vote:</strong>
+“All those in favor of passing this legislation, please say ‘Aye’. All opposed, ‘Nay’. 
+In the opinion of the chair, the ‘Ayes/Nays’ have it and the legislation is passed/failed.”
+
+<strong>Division of the house (if requested):</strong>
+“A division has been called. All those in favor, please rise. … You may be seated. All opposed, please rise. … 
+With a vote of [yes] to [no], this legislation [passes/fails].”
+
+<strong>Recording results:</strong>
+“The results will be recorded and reported to tournament officials. We will now proceed to the next item on the docket.”
+                </div>
+              </details>
+
+              <details class="script-block">
+                <summary>
+                  <div class="script-tag-line">Closing the session</div>
+                  Professional, clean adjournment
+                </summary>
+                <div class="script-body">
+<strong>Final remarks:</strong>
+“Delegates, thank you for a productive session and for maintaining decorum throughout.”
+
+<strong>Recognizing judges & staff:</strong>
+“On behalf of this chamber, I’d like to thank our judges, tournament staff, and coaches for their support.”
+
+<strong>Adjournment:</strong>
+“If there are no further privileged motions, this session of [chamber name] is now adjourned. [Tap gavel.]”
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>
+        Built for <strong>NSDA Congressional Debate</strong> – customize & host for your circuit.
+      </span>
+      <span class="muted">
+        Tip: clone this file into your own repo and plug in real-time sync (Firebase, Supabase, etc.).
+      </span>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-dot"></span>
+    <span id="toastMessage">Saved.</span>
+  </div>
+
+  <script>
+    // -----------------------------
+    // Basic data model & persistence
+    // -----------------------------
+    const STORAGE_KEY = "congressFlowState_v1";
+
+    const appState = {
+      chambers: {}, // { [code]: { name, password, createdAt, precedence: [], amendments: [] } }
+      activeChamberCode: null,
+      activeRole: "po", // "po" | "competitor" | "observer"
+      activeSpeakerId: null,
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          Object.assign(appState, parsed);
+        }
+      } catch (e) {
+        console.warn("Failed to load stored state:", e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.warn("Failed to save state:", e);
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      const msgSpan = document.getElementById("toastMessage");
+      msgSpan.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2100);
+    }
+
+    function generateJoinCode() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let code = "";
+      for (let i = 0; i < 5; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+      }
+      // avoid collision for local usage
+      if (appState.chambers[code]) return generateJoinCode();
+      return code;
+    }
+
+    function getActiveChamber() {
+      if (!appState.activeChamberCode) return null;
+      return appState.chambers[appState.activeChamberCode] || null;
+    }
+
+    function setActiveChamber(code, role) {
+      appState.activeChamberCode = code;
+      appState.activeRole = role || "po";
+      saveState();
+      refreshDashboardVisibility();
+      renderDashboard();
+    }
+
+    // -----------------------------
+    // Initial load
+    // -----------------------------
+    loadState();
+
+    // -----------------------------
+    // UI: Chamber create / join toggle
+    // -----------------------------
+    const tabCreate = document.getElementById("tabCreate");
+    const tabJoin = document.getElementById("tabJoin");
+    const createPanel = document.getElementById("createChamberPanel");
+    const joinPanel = document.getElementById("joinChamberPanel");
+
+    function switchCreateJoin(mode) {
+      if (mode === "create") {
+        tabCreate.classList.add("active");
+        tabJoin.classList.remove("active");
+        createPanel.classList.remove("hidden");
+        joinPanel.classList.add("hidden");
+      } else {
+        tabJoin.classList.add("active");
+        tabCreate.classList.remove("active");
+        joinPanel.classList.remove("hidden");
+        createPanel.classList.add("hidden");
+      }
+    }
+
+    tabCreate.addEventListener("click", () => switchCreateJoin("create"));
+    tabJoin.addEventListener("click", () => switchCreateJoin("join"));
+
+    document.getElementById("btnStartAsPO").addEventListener("click", () => {
+      switchCreateJoin("create");
+      document.getElementById("createChamberName").focus();
+    });
+
+    document.getElementById("btnJoinAsCompetitor").addEventListener("click", () => {
+      switchCreateJoin("join");
+      document.getElementById("joinRole").value = "competitor";
+      document.getElementById("joinCode").focus();
+    });
+
+    // -----------------------------
+    // Create Chamber
+    // -----------------------------
+    const createChamberForm = document.getElementById("createChamberForm");
+    const createChamberError = document.getElementById("createChamberError");
+
+    createChamberForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      createChamberError.classList.add("hidden");
+      const name = document.getElementById("createChamberName").value.trim();
+      const password = document.getElementById("createChamberPassword").value.trim();
+      if (!name || !password) {
+        createChamberError.textContent = "Please enter both a chamber name and password.";
+        createChamberError.classList.remove("hidden");
+        return;
+      }
+
+      const code = generateJoinCode();
+      const now = Date.now();
+      appState.chambers[code] = {
+        name,
+        password,
+        createdAt: now,
+        precedence: [],
+        amendments: [],
+      };
+      saveState();
+      setActiveChamber(code, "po");
+      showToast(`Chamber created. Join code: ${code}`);
+      // Reset form
+      createChamberForm.reset();
+    });
+
+    // -----------------------------
+    // Join Chamber
+    // -----------------------------
+    const joinChamberForm = document.getElementById("joinChamberForm");
+    const joinChamberError = document.getElementById("joinChamberError");
+
+    joinChamberForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      joinChamberError.classList.add("hidden");
+      const code = document.getElementById("joinCode").value.trim().toUpperCase();
+      const password = document.getElementById("joinPassword").value.trim();
+      const role = document.getElementById("joinRole").value;
+
+      if (!code || !password) {
+        joinChamberError.textContent = "Please enter both a join code and password.";
+        joinChamberError.classList.remove("hidden");
+        return;
+      }
+
+      const chamber = appState.chambers[code];
+      if (!chamber) {
+        joinChamberError.textContent = "That code doesn’t match an existing chamber on this device.";
+        joinChamberError.classList.remove("hidden");
+        return;
+      }
+      if (chamber.password !== password) {
+        joinChamberError.textContent = "Incorrect password for this chamber.";
+        joinChamberError.classList.remove("hidden");
+        return;
+      }
+
+      setActiveChamber(code, role);
+      showToast(`Joined chamber ${code} as ${role}.`);
+      joinChamberForm.reset();
+    });
+
+    // -----------------------------
+    // Dashboard visibility & role
+    // -----------------------------
+    const chamberDashboard = document.getElementById("chamberDashboard");
+    const chamberNameDisplay = document.getElementById("chamberNameDisplay");
+    const chamberCodeDisplay = document.getElementById("chamberCodeDisplay");
+    const roleLabel = document.getElementById("roleLabel");
+    const roleDot = document.getElementById("roleDot");
+    const dashboardInner = document.getElementById("dashboardInner");
+
+    function refreshDashboardVisibility() {
+      const active = getActiveChamber();
+      if (!active) {
+        chamberDashboard.classList.add("hidden");
+        return;
+      }
+      chamberDashboard.classList.remove("hidden");
+    }
+
+    function renderDashboard() {
+      const chamber = getActiveChamber();
+      if (!chamber) return;
+
+      chamberNameDisplay.textContent = chamber.name;
+      chamberCodeDisplay.textContent = appState.activeChamberCode;
+
+      // Role styling
+      dashboardInner.classList.remove("po-active");
+      if (appState.activeRole === "po") {
+        roleLabel.textContent = "Presiding Officer";
+        roleDot.className = "role-dot-po";
+        dashboardInner.classList.add("po-active");
+      } else if (appState.activeRole === "competitor") {
+        roleLabel.textContent = "Competitor";
+        roleDot.className = "role-dot-comp";
+      } else {
+        roleLabel.textContent = "Observer / Judge";
+        roleDot.className = "role-dot-comp";
+      }
+
+      renderPrecedenceTable();
+      renderAmendments();
+    }
+
+    // -----------------------------
+    // Tabs inside dashboard
+    // -----------------------------
+    const tabButtons = document.querySelectorAll(".tab-buttons button");
+    const tabPanels = document.querySelectorAll(".tab-panel");
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tab = btn.getAttribute("data-tab");
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        tabPanels.forEach((panel) => {
+          const panelTab = panel.getAttribute("data-panel");
+          if (panelTab === tab) {
+            panel.classList.remove("hidden");
+          } else {
+            panel.classList.add("hidden");
+          }
+        });
+      });
+    });
+
+    // -----------------------------
+    // Precedence handling
+    // -----------------------------
+    const precedenceTableBody = document.getElementById("precedenceTableBody");
+    const precedenceCount = document.getElementById("precedenceCount");
+    const addSpeakerForm = document.getElementById("addSpeakerForm");
+    const addSpeakerError = document.getElementById("addSpeakerError");
+
+    function sortPrecedence(precedence) {
+      return precedence.slice().sort((a, b) => {
+        if (a.speeches !== b.speeches) return a.speeches - b.speeches;
+        if (a.questions !== b.questions) return a.questions - b.questions;
+        const ta = a.lastSpokeTime || 0;
+        const tb = b.lastSpokeTime || 0;
+        if (ta !== tb) return ta - tb;
+        return a.name.localeCompare(b.name);
+      });
+    }
+
+    function formatTimeAgo(timestamp) {
+      if (!timestamp) return "—";
+      const diff = Date.now() - timestamp;
+      const minutes = Math.floor(diff / 60000);
+      if (minutes <= 0) return "< 1 min ago";
+      if (minutes === 1) return "1 min ago";
+      if (minutes < 60) return `${minutes} mins ago`;
+      const hours = Math.floor(minutes / 60);
+      if (hours === 1) return "1 hr ago";
+      return `${hours} hrs ago`;
+    }
+
+    function renderPrecedenceTable() {
+      const chamber = getActiveChamber();
+      if (!chamber) return;
+
+      const sorted = sortPrecedence(chamber.precedence);
+      precedenceTableBody.innerHTML = "";
+      precedenceCount.textContent = sorted.length;
+
+      sorted.forEach((speaker) => {
+        const tr = document.createElement("tr");
+
+        const tdName = document.createElement("td");
+        tdName.textContent = speaker.name;
+        tr.appendChild(tdName);
+
+        const tdSchool = document.createElement("td");
+        tdSchool.textContent = speaker.school || "—";
+        tr.appendChild(tdSchool);
+
+        const tdSeat = document.createElement("td");
+        tdSeat.textContent = speaker.seat || "—";
+        tr.appendChild(tdSeat);
+
+        const tdSpeeches = document.createElement("td");
+        tdSpeeches.innerHTML = `<span class="badge-count">${speaker.speeches}</span>`;
+        tr.appendChild(tdSpeeches);
+
+        const tdQuestions = document.createElement("td");
+        tdQuestions.innerHTML = `<span class="badge-count">${speaker.questions}</span>`;
+        tr.appendChild(tdQuestions);
+
+        const tdLast = document.createElement("td");
+        tdLast.textContent = formatTimeAgo(speaker.lastSpokeTime);
+        tr.appendChild(tdLast);
+
+        const tdTags = document.createElement("td");
+        const tags = [];
+        if (speaker.speeches === 0) {
+          tags.push(`<span class="tag tag-speaker">Has not spoken yet</span>`);
+        } else if (speaker.speeches === 1) {
+          tags.push(`<span class="tag tag-speaker">One speech</span>`);
+        } else {
+          tags.push(`<span class="tag tag-speaker">${speaker.speeches} speeches</span>`);
+        }
+
+        if (speaker.id === appState.activeSpeakerId) {
+          tags.push(`<span class="tag tag-current">Current speaker</span>`);
+        }
+
+        tdTags.innerHTML = tags.join(" ");
+        tr.appendChild(tdTags);
+
+        const tdActions = document.createElement("td");
+        if (appState.activeRole === "po") {
+          const btnSpeech = document.createElement("button");
+          btnSpeech.type = "button";
+          btnSpeech.className = "small-btn small-btn-primary";
+          btnSpeech.textContent = "+ Speech";
+          btnSpeech.title = "Log a full speech for this speaker";
+          btnSpeech.addEventListener("click", () => {
+            speaker.speeches += 1;
+            speaker.lastSpokeTime = Date.now();
+            appState.activeSpeakerId = speaker.id;
+            saveState();
+            renderPrecedenceTable();
+            showToast(`Logged a speech for ${speaker.name}.`);
+          });
+
+          const btnQuestion = document.createElement("button");
+          btnQuestion.type = "button";
+          btnQuestion.className = "small-btn";
+          btnQuestion.textContent = "+ Q";
+          btnQuestion.title = "Log a question asked by this speaker";
+          btnQuestion.addEventListener("click", () => {
+            speaker.questions += 1;
+            saveState();
+            renderPrecedenceTable();
+            showToast(`Logged a question for ${speaker.name}.`);
+          });
+
+          const btnReset = document.createElement("button");
+          btnReset.type = "button";
+          btnReset.className = "small-btn small-btn-danger";
+          btnReset.textContent = "Reset";
+          btnReset.title = "Reset counts for this speaker";
+          btnReset.addEventListener("click", () => {
+            if (!confirm(`Reset precedence counts for ${speaker.name}?`)) return;
+            speaker.speeches = 0;
+            speaker.questions = 0;
+            speaker.lastSpokeTime = null;
+            if (appState.activeSpeakerId === speaker.id) {
+              appState.activeSpeakerId = null;
+            }
+            saveState();
+            renderPrecedenceTable();
+          });
+
+          tdActions.appendChild(btnSpeech);
+          tdActions.appendChild(document.createTextNode(" "));
+          tdActions.appendChild(btnQuestion);
+          tdActions.appendChild(document.createTextNode(" "));
+          tdActions.appendChild(btnReset);
+        } else {
+          tdActions.textContent = "View-only";
+          tdActions.classList.add("muted");
+        }
+        tr.appendChild(tdActions);
+
+        precedenceTableBody.appendChild(tr);
+      });
+    }
+
+    addSpeakerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      addSpeakerError.classList.add("hidden");
+      const chamber = getActiveChamber();
+      if (!chamber) return;
+
+      const name = document.getElementById("speakerName").value.trim();
+      const school = document.getElementById("speakerSchool").value.trim();
+      const seat = document.getElementById("speakerSeat").value.trim();
+
+      if (!name) {
+        addSpeakerError.textContent = "Speaker name is required.";
+        addSpeakerError.classList.remove("hidden");
+        return;
+      }
+
+      const id = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+
+      chamber.precedence.push({
+        id,
+        name,
+        school,
+        seat,
+        speeches: 0,
+        questions: 0,
+        lastSpokeTime: null,
+      });
+
+      saveState();
+      renderPrecedenceTable();
+      addSpeakerForm.reset();
+      showToast(`Added ${name} to precedence.`);
+    });
+
+    const btnSuggestNext = document.getElementById("btnSuggestNext");
+    btnSuggestNext.addEventListener("click", () => {
+      const chamber = getActiveChamber();
+      if (!chamber || chamber.precedence.length === 0) {
+        showToast("No speakers in precedence yet.");
+        return;
+      }
+      const sorted = sortPrecedence(chamber.precedence);
+      const next = sorted[0];
+      if (!next) {
+        showToast("No eligible speakers found.");
+        return;
+      }
+      appState.activeSpeakerId = next.id;
+      saveState();
+      renderPrecedenceTable();
+      showToast(`Next suggested speaker: ${next.name} (${next.school || "school"})`);
+    });
+
+    // -----------------------------
+    // Amendments handling
+    // -----------------------------
+    const amendmentForm = document.getElementById("amendmentForm");
+    const amendError = document.getElementById("amendError");
+    const amendmentsList = document.getElementById("amendmentsList");
+    const pendingAmendCount = document.getElementById("pendingAmendCount");
+
+    amendmentForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      amendError.classList.add("hidden");
+      const chamber = getActiveChamber();
+      if (!chamber) {
+        amendError.textContent = "No active chamber. Join a chamber first.";
+        amendError.classList.remove("hidden");
+        return;
+      }
+
+      const name = document.getElementById("amendName").value.trim();
+      const school = document.getElementById("amendSchool").value.trim();
+      const bill = document.getElementById("amendBillTitle").value.trim();
+      const section = document.getElementById("amendSection").value.trim();
+      const text = document.getElementById("amendText").value.trim();
+      const just = document.getElementById("amendJust").value.trim();
+
+      if (!name || !bill || !section || !text) {
+        amendError.textContent = "Please complete all required fields before submitting.";
+        amendError.classList.remove("hidden");
+        return;
+      }
+
+      const id = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      const createdAt = Date.now();
+
+      chamber.amendments.unshift({
+        id,
+        name,
+        school,
+        bill,
+        section,
+        text,
+        justification: just,
+        status: "pending",
+        createdAt,
+        decidedAt: null,
+      });
+
+      saveState();
+      renderAmendments();
+      amendmentForm.reset();
+      showToast("Amendment submitted to the PO.");
+    });
+
+    function renderAmendments() {
+      const chamber = getActiveChamber();
+      if (!chamber) return;
+
+      const amendments = chamber.amendments || [];
+      amendmentsList.innerHTML = "";
+      let pendingCount = 0;
+
+      amendments.forEach((am) => {
+        if (am.status === "pending") pendingCount += 1;
+
+        const card = document.createElement("div");
+        card.className = "amend-card";
+
+        const header = document.createElement("div");
+        header.className = "amend-header";
+        header.innerHTML = `
+          <div><strong>${am.bill}</strong></div>
+          <div class="status-pill ${am.status}">
+            <span>${am.status.toUpperCase()}</span>
+          </div>
+        `;
+        card.appendChild(header);
+
+        const meta = document.createElement("div");
+        meta.className = "amend-meta";
+        const timestamp = new Date(am.createdAt);
+        const timeStr = timestamp.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+        meta.innerHTML = `
+          <span>By <strong>${am.name}</strong> ${am.school ? "· " + am.school : ""}</span>
+          <span>Section: <strong>${am.section}</strong></span>
+          <span>Submitted: ${timeStr}</span>
+        `;
+        card.appendChild(meta);
+
+        const body = document.createElement("div");
+        body.className = "amend-body";
+        body.textContent = am.text;
+        card.appendChild(body);
+
+        if (am.justification) {
+          const just = document.createElement("div");
+          just.className = "amend-just";
+          just.textContent = "Rationale: " + am.justification;
+          card.appendChild(just);
+        }
+
+        const footer = document.createElement("div");
+        footer.className = "amend-footer";
+
+        const statusText = document.createElement("span");
+        statusText.className = "muted";
+        if (am.status === "pending") {
+          statusText.textContent = "Waiting on PO review.";
+        } else {
+          const decided = new Date(am.decidedAt);
+          const decidedStr = decided.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+          statusText.textContent =
+            am.status === "approved"
+              ? `Approved at ${decidedStr}.`
+              : `Rejected at ${decidedStr}.`;
+        }
+
+        footer.appendChild(statusText);
+
+        const actionsContainer = document.createElement("div");
+        if (appState.activeRole === "po" && am.status === "pending") {
+          const approveBtn = document.createElement("button");
+          approveBtn.type = "button";
+          approveBtn.className = "small-btn small-btn-primary";
+          approveBtn.textContent = "Mark in order";
+          approveBtn.addEventListener("click", () => {
+            am.status = "approved";
+            am.decidedAt = Date.now();
+            saveState();
+            renderAmendments();
+            showToast("Amendment marked in order.");
+          });
+
+          const rejectBtn = document.createElement("button");
+          rejectBtn.type = "button";
+          rejectBtn.className = "small-btn small-btn-danger";
+          rejectBtn.textContent = "Mark out of order";
+          rejectBtn.addEventListener("click", () => {
+            am.status = "rejected";
+            am.decidedAt = Date.now();
+            saveState();
+            renderAmendments();
+            showToast("Amendment marked out of order.");
+          });
+
+          actionsContainer.appendChild(approveBtn);
+          actionsContainer.appendChild(document.createTextNode(" "));
+          actionsContainer.appendChild(rejectBtn);
+        } else {
+          actionsContainer.innerHTML = `<span class="muted">PO-only action area</span>`;
+        }
+
+        footer.appendChild(actionsContainer);
+        card.appendChild(footer);
+
+        amendmentsList.appendChild(card);
+      });
+
+      pendingAmendCount.textContent = pendingCount;
+    }
+
+    // -----------------------------
+    // On initial render
+    // -----------------------------
+    refreshDashboardVisibility();
+    renderDashboard();
+  </script>
+</body>
+</html>
